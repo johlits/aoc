@@ -24,6 +24,9 @@
     <None Update="day04\p.in">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="day07\p.in">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="day06\p.in">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
