@@ -4,10 +4,8 @@
     {
         using (StreamReader file = new StreamReader("day06/p.in"))
         {
-            string? ln;
             var times = new List<ulong>();
             var distances = new List<ulong>();
-            var row = 0;
             times.Add(56717999);
             distances.Add(334113513502430);
             //while ((ln = file.ReadLine()) != null)

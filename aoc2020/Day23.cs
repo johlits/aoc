@@ -55,7 +55,7 @@ namespace Advent
         {
             var input = "186524973";
             var dic = new Dictionary<int, Mug>();
-            int i, j;
+            int i;
             Mug prev = null;
             Mug first = null;
 
