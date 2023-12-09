@@ -1,5 +1,5 @@
 ﻿open System
-open Day1
+open Day
 
 let run argv =
     let result1 = Day.part1
