@@ -45,8 +45,7 @@ public class Day12
                     GetFromCache("." + p.Substring(1), n) +
                     GetFromCache("#" + p.Substring(1), n);
             }
-
-            if (p.StartsWith('#'))
+            else if (p.StartsWith('#'))
             {
                 if (n.Count == 0)
                 {
