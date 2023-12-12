@@ -21,12 +21,12 @@ public class Day12
                 {
                     p += "?" + words[0];
                 }
-                for (var i = 0; i < 100; i++)
-                {
-                    p = p.Replace(".?#", ".##");
-                    p = p.Replace("#?.", "##.");
-                    p = p.Replace("..", ".");
-                }
+                //for (var i = 0; i < 100; i++)
+                //{
+                //    p = p.Replace(".?#", ".##");
+                //    p = p.Replace("#?.", "##.");
+                //    p = p.Replace("..", ".");
+                //}
                 p = "." + p + ".";
                 
                 var w = words[1];
@@ -34,7 +34,7 @@ public class Day12
                 {
                     w += "," + words[1];
                 }
-                
+
                 Console.WriteLine(w);
 
                 var nums = w.Split(",");
@@ -45,123 +45,121 @@ public class Day12
                     n.Add(int.Parse(num));
                 }
 
-                var newP = p.ToCharArray();
-
-                // do something?
-
-                p = new string(newP);
                 Console.WriteLine(p);
 
-                long qs = 1;
-                long bs = 1;
-                var q = 0;
-                var qpos = new List<int>();
-                var bitworth = new List<long>();
-                for (var i = 0; i < p.Length; i++)
-                {
-                    if (p[i] == '?')
-                    {
-                        q++;
-                        
-                        qs *= 2;
-                        
+                var q = new Queue<Tuple<int, List<int>>>();
+                var hs = new HashSet<string>();
 
-                        qpos.Add(i);
-                    }
-                    if (bs > 0)
-                    {
-                        bitworth.Add(bs);
-                        bs *= 2;
-                    }
+                var l = new List<int>();
+                l.Add(1);
+                for (var i = 1; i < nums.Count(); i++)
+                {
+                    l.Add(l[i - 1] + n[i - 1] + 1);
+
                 }
-                
-                for (long i = 0; i < qs; i++)
+
+                q.Enqueue(new Tuple<int, List<int>>(0, l));
+
+                while (q.Count > 0)
                 {
-                    char[] temp = p.ToCharArray();
-                    string binaryString = Convert.ToString(i, 2).PadLeft(q, '0');
-                    for (var j = 0; j < binaryString.Length; j++)
-                    {
-                        temp[qpos[j]] = binaryString[j] == '1' ? '#' : '.';
-                    }
-                    var islands = new List<int>();
-                    var islandCount = 0;
-                    var building = false;
-                    var bc = 0;
-                    foreach (var c in temp)
-                    {
+                    var t = q.Dequeue();
+                    var list = new List<int>(t.Item2);
 
-                        if (c == '#')
+                    var tmp = p.ToCharArray();
+
+                    for (var i = 0; i < tmp.Length; i++)
+                    {
+                        tmp[i] = '.';
+                    }
+
+                    for (var j = 0; j < list.Count; j++)
+                    {
+                        for (var k = 0; k < n[j]; k++)
                         {
-                            if (building == false)
+                            tmp[list[j] + k] = '#';
+                        }
+                    }
+
+                    var valid = true;
+                    var inhash = false;
+                    var hashes = 0;
+                    for (var i = 0; i < tmp.Length; i++)
+                    {
+                        if (tmp[i] == '#')
+                        {
+                            if (!inhash)
                             {
-                                building = true;
-                                bc = 1;
+                                inhash = true;
+                                hashes++;
                             }
-                            else
+                            if (p[i] == '.')
                             {
-                                bc++;
+                                valid = false;
+                                break;
                             }
                         }
-                        else
+                        if (tmp[i] == '.')
                         {
-                            if (building == true)
+                            if (inhash)
                             {
-
-                                if (bc != n[islandCount])
-                                {
-                                    //if (q - islandCount - 30 >= 0)
-                                    //{
-                                    //    i += bitworth[q - islandCount - 30];
-                                    //}
-
-                                    break;
-                                }
-
-                                islandCount++;
-
-                                if (islandCount > n.Count)
-                                {
-                                    break;
-                                }
-                                
-
-                                building = false;
-                                islands.Add(bc);
-                                bc = 0;
+                                inhash = false;
+                            }
+                            if (p[i] == '#')
+                            {
+                                valid = false;
+                                break;
                             }
                         }
                     }
-                    if (building)
+
+                    //Console.WriteLine(new String(tmp) + " " + (valid ? "VALID" : "INVALID"));
+
+                    if (valid && !hs.Contains(new String(tmp)))
                     {
-                        islands.Add(bc);
-                    }
-                    
-                    //Console.WriteLine();
-                    var ok = true;
-                    if (islands.Count != n.Count)
-                    {
-                        ok = false;
-                    }
-                    else
-                    {
-                        for (var j = 0; j < islands.Count; j++)
-                        {
-                            if (islands[j] != n[j])
-                            {
-                                ok = false;
-                            }
-                        }
-                    }
-                    
-                    if (ok)
-                    {
-                        //Console.WriteLine("OK");
-                        cnttemp++;
+                        hs.Add(new string(tmp));
                         cnt++;
+                        cnttemp++;
+                    }
+
+                    if (!valid && hashes <= t.Item1)
+                    {
+                        continue;
+                    }
+
+                    if (t.Item1 == n.Count)
+                    {
+                        continue;
+                    }
+
+
+                    while (list[t.Item1] + n[t.Item1] < p.Count())
+                    {
+                        //if (t.Item1 < n.Count() - 1)
+                        //{
+                        //    if (list[t.Item1] + n[t.Item1] > list[t.Item1 + 1])
+                        //    {
+                        //        break;
+                        //    }
+                        //}
+                        q.Enqueue(new Tuple<int, List<int>>(t.Item1 + 1, new List<int>(list)));
+
+                        var brejk = false;                        
+                        for (var i = t.Item1; i < n.Count; i++)
+                        {
+                            list[i]++;
+                            if (list[i] + n[i] >= p.Count())
+                            {
+                                brejk = true;
+                                break;
+                            }
+                        }
+                        if (brejk)
+                        {
+                            break;
+                        }
+                        
                     }
                 }
-
-                //Console.WriteLine();
                 
                 Console.WriteLine("Cnt: " + cnttemp);
 
