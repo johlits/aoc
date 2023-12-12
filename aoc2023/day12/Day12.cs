@@ -1,178 +1,107 @@
 ﻿
 using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics.X86;
+using System.Text.RegularExpressions;
 
 public class Day12
 {
+    static Dictionary<string, long> cache = new Dictionary<string, long>();
+
+    public static long GetFromCache(string p, List<int> n)
+    {
+        var key = p + "," + string.Join(',', n);
+
+        if (cache.ContainsKey(key))
+        {
+            return cache[key]; ;
+        }
+
+        var cnt = GetCount(p, n);
+        cache[key] = cnt;
+
+        return cnt;
+    }
+
+    public static long GetCount(string p, List<int> n)
+    {
+        while (true)
+        {
+            if (n.Count == 0)
+            {
+                return p.Contains('#') ? 0 : 1;
+            }
+            else if (p == "")
+            {
+                return 0;
+            }
+            else if (p.StartsWith('.'))
+            {
+                p = p.Trim('.');
+                continue;
+            }
+            else if (p.StartsWith('?'))
+            {
+                return
+                    GetFromCache("." + p.Substring(1), n) +
+                    GetFromCache("#" + p.Substring(1), n);
+            }
+
+            if (p.StartsWith('#'))
+            {
+                if (n.Count == 0)
+                {
+                    return 0;
+                }
+
+                if (p.Length < n[0])
+                {
+                    return 0;
+                }
+
+                if (p.Substring(0, n[0]).Contains('.'))
+                {
+                    return 0;
+                }
+
+                if (n.Count > 1)
+                {
+                    if (p.Length < n[0] + 1 || p[n[0]] == '#')
+                    {
+                        return 0;
+                    }
+
+                    p = p.Substring(n[0] + 1);
+                    n = n.Skip(1).ToList();
+                    continue;
+                }
+
+                p = p.Substring(n[0]);
+                n = n.Skip(1).ToList();
+                continue;
+            }
+        }
+    }
+
     public static void Run()
     {
         using (StreamReader file = new StreamReader("day12/p.in"))
         {
-            ulong cnt = 0;
+            long cnt = 0;
             
-
             string? ln;
-            while ((ln = file.ReadLine()) != null)
-            {
-                var cnttemp = 0;
+            while ((ln = file.ReadLine()) != null) {
 
-                var words = ln.Split(" ");
-                var p = words[0];
-                for (var i = 0; i < 4; i++)
-                {
-                    p += "?" + words[0];
-                }
-                //for (var i = 0; i < 100; i++)
-                //{
-                //    p = p.Replace(".?#", ".##");
-                //    p = p.Replace("#?.", "##.");
-                //    p = p.Replace("..", ".");
-                //}
-                p = "." + p + ".";
-                
-                var w = words[1];
-                for (var i = 0; i < 4; i++)
-                {
-                    w += "," + words[1];
-                }
+                var line = ln.Split(' ');
+                var p = string.Join('?', Enumerable.Repeat(line[0], 5));
+                var n = Enumerable.Repeat(line[1].Split(',')
+                    .Select(int.Parse).ToList(), 5)
+                    .SelectMany(x => x).ToList();
 
-                Console.WriteLine(w);
-
-                var nums = w.Split(",");
-                var n = new List<int>();
-
-                foreach (var num in nums)
-                {
-                    n.Add(int.Parse(num));
-                }
-
-                Console.WriteLine(p);
-
-                var q = new Queue<Tuple<int, List<int>>>();
-                var hs = new HashSet<string>();
-
-                var l = new List<int>();
-                l.Add(1);
-                for (var i = 1; i < nums.Count(); i++)
-                {
-                    l.Add(l[i - 1] + n[i - 1] + 1);
-
-                }
-
-                q.Enqueue(new Tuple<int, List<int>>(0, l));
-
-                while (q.Count > 0)
-                {
-                    var t = q.Dequeue();
-                    var list = new List<int>(t.Item2);
-
-                    var tmp = p.ToCharArray();
-
-                    for (var i = 0; i < tmp.Length; i++)
-                    {
-                        tmp[i] = '.';
-                    }
-
-                    for (var j = 0; j < list.Count; j++)
-                    {
-                        for (var k = 0; k < n[j]; k++)
-                        {
-                            tmp[list[j] + k] = '#';
-                        }
-                    }
-
-                    var valid = true;
-                    var inhash = false;
-                    var hashes = 0;
-                    for (var i = 0; i < tmp.Length; i++)
-                    {
-                        if (tmp[i] == '#')
-                        {
-                            if (!inhash)
-                            {
-                                inhash = true;
-                                hashes++;
-                            }
-                            if (p[i] == '.')
-                            {
-                                valid = false;
-                                break;
-                            }
-                        }
-                        if (tmp[i] == '.')
-                        {
-                            if (inhash)
-                            {
-                                inhash = false;
-                            }
-                            if (p[i] == '#')
-                            {
-                                valid = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    //Console.WriteLine(new String(tmp));
-
-                    //Console.WriteLine(new String(tmp) + " " + (valid ? "VALID" : "INVALID"));
-
-                    //if (hs.Contains(new String(tmp)))
-                    //    continue;
-
-                    if (valid && !hs.Contains(new String(tmp)))
-                    {
-                        hs.Add(new String(tmp));
-                        cnt++;
-                        cnttemp++;
-                    }
-
-                    
-
-                    if (!valid && hashes <= t.Item1)
-                    {
-                        continue;
-                    }
-
-                    if (t.Item1 == n.Count)
-                    {
-                        continue;
-                    }
-
-
-                    while (list[t.Item1] + n[t.Item1] < p.Count())
-                    {
-                        //if (t.Item1 < n.Count() - 1)
-                        //{
-                        //    if (list[t.Item1] + n[t.Item1] > list[t.Item1 + 1])
-                        //    {
-                        //        break;
-                        //    }
-                        //}
-                        q.Enqueue(new Tuple<int, List<int>>(t.Item1 + 1, new List<int>(list)));
-
-                        var brejk = false;                        
-                        for (var i = t.Item1; i < n.Count; i++)
-                        {
-                            list[i]++;
-                            if (list[i] + n[i] >= p.Count())
-                            {
-                                brejk = true;
-                                break;
-                            }
-                        }
-                        if (brejk)
-                        {
-                            break;
-                        }
-                        
-                    }
-                }
-                
-                Console.WriteLine("Cnt: " + cnttemp);
-
+                cache.Clear();
+                cnt += GetFromCache(p, n);
             }
-            Console.WriteLine("TOT: " + cnt);
 
+            Console.WriteLine(cnt);
             file.Close();
         }
     }
