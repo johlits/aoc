@@ -112,14 +112,21 @@ public class Day12
                         }
                     }
 
+                    //Console.WriteLine(new String(tmp));
+
                     //Console.WriteLine(new String(tmp) + " " + (valid ? "VALID" : "INVALID"));
+
+                    //if (hs.Contains(new String(tmp)))
+                    //    continue;
 
                     if (valid && !hs.Contains(new String(tmp)))
                     {
-                        hs.Add(new string(tmp));
+                        hs.Add(new String(tmp));
                         cnt++;
                         cnttemp++;
                     }
+
+                    
 
                     if (!valid && hashes <= t.Item1)
                     {
