@@ -29,7 +29,7 @@ public class Day13
             {
                 // row by row
                 var rscore = 0;
-                var rscore_cnt = 0;
+                //var rscore_cnt = 0;
                 var foundr = false;
 
                 for (var i = 1; i < m.Count; i++)
@@ -40,14 +40,14 @@ public class Day13
                         var rscore_temp = i;
                         var u = i - 1;
                         var d = i;
-                        var score = 0;
+                        //var score = 0;
 
-                        score++;
-                        if (score > rscore_cnt)
-                        {
+                        //score++;
+                        //if (score > rscore_cnt)
+                        //{
                             rscore = rscore_temp;
-                            rscore_cnt = score;
-                        }
+                            //rscore_cnt = score;
+                        //}
 
                         var eq = true;
                         while (u > 0 && d < m.Count - 1)
@@ -63,12 +63,12 @@ public class Day13
                                 break;
                             }
 
-                            score++;
-                            if (score > rscore_cnt)
-                            {
-                                rscore = rscore_temp;
-                                rscore_cnt = score;
-                            }
+                            //score++;
+                            //if (score > rscore_cnt)
+                            //{
+                                //rscore = rscore_temp;
+                                //rscore_cnt = score;
+                            //}
                         }
                         if (eq)
                         {
@@ -80,7 +80,7 @@ public class Day13
 
                 // col by col
                 var cscore = 0;
-                var cscore_cnt = 0;
+                //var cscore_cnt = 0;
                 var foundc = false;
 
                 var len = m[0].Length;
@@ -101,14 +101,14 @@ public class Day13
                         var cscore_temp = i;
                         var l = i - 1;
                         var r = i;
-                        var score = 0;
+                        //var score = 0;
 
-                        score++;
-                        if (score > cscore_cnt)
-                        {
+                        //score++;
+                        //if (score > cscore_cnt)
+                        //{
                             cscore = cscore_temp;
-                            cscore_cnt = score;
-                        }
+                            //cscore_cnt = score;
+                        //}
 
                         while (l > 0 && r < len - 1)
                         {
@@ -130,12 +130,12 @@ public class Day13
                                 break;
                             }
 
-                            score++;
-                            if (score > cscore_cnt)
-                            {
-                                cscore = cscore_temp;
-                                cscore_cnt = score;
-                            }
+                            //score++;
+                            //if (score > cscore_cnt)
+                            //{
+                            //    cscore = cscore_temp;
+                            //    cscore_cnt = score;
+                            //}
                         }
 
                         if (eq)
