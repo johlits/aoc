@@ -41,15 +41,18 @@ public class Day13
                         var u = i - 1;
                         var d = i;
                         var score = 0;
+
+                        score++;
+                        if (score > rscore_cnt)
+                        {
+                            rscore = rscore_temp;
+                            rscore_cnt = score;
+                        }
+
                         var eq = true;
                         while (u > 0 && d < m.Count - 1)
                         {
-                            score++;
-                            if (score > rscore_cnt)
-                            {
-                                rscore = rscore_temp;
-                                rscore_cnt = score;
-                            }
+                            
 
                             u--;
                             d++;
@@ -58,6 +61,13 @@ public class Day13
                             {
                                 eq = false;
                                 break;
+                            }
+
+                            score++;
+                            if (score > rscore_cnt)
+                            {
+                                rscore = rscore_temp;
+                                rscore_cnt = score;
                             }
                         }
                         if (eq)
@@ -93,15 +103,15 @@ public class Day13
                         var r = i;
                         var score = 0;
 
+                        score++;
+                        if (score > cscore_cnt)
+                        {
+                            cscore = cscore_temp;
+                            cscore_cnt = score;
+                        }
+
                         while (l > 0 && r < len - 1)
                         {
-                            
-                            score++;
-                            if (score > cscore_cnt)
-                            {
-                                cscore = cscore_temp;
-                                cscore_cnt = score;
-                            }
 
                             l--;
                             r++;
@@ -118,6 +128,13 @@ public class Day13
                             if (eq == false)
                             {
                                 break;
+                            }
+
+                            score++;
+                            if (score > cscore_cnt)
+                            {
+                                cscore = cscore_temp;
+                                cscore_cnt = score;
                             }
                         }
 
@@ -137,6 +154,10 @@ public class Day13
                 {
                     //Console.WriteLine(cscore);
                     cnt += cscore;
+                }
+                if (!foundr && !foundc)
+                {
+                    throw new Exception();
                 }
                 if (foundr && foundc)
                 {
