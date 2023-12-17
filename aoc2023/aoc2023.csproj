@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="OptimizedPriorityQueue" Version="5.1.0" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
   </ItemGroup>
 
@@ -58,6 +59,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="day17\p.in">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="day18\p.in">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="day\p.in">
