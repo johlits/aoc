@@ -1,10 +1,10 @@
-﻿module Day
+﻿module Day5
 open System.IO
 open System
 
-type Day() =
+type Day5() =
     static member Run() =
-        use file = new StreamReader("day/p.in")
+        use file = new StreamReader("day05/p.in")
 
         let rec readLines() =
             match file.ReadLine() with
@@ -14,4 +14,3 @@ type Day() =
                 readLines()
 
         readLines()
-

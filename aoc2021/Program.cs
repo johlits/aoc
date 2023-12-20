@@ -1,1 +1,1 @@
-﻿Day3.Run();
+﻿Day.Run();
