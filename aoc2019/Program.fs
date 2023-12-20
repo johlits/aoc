@@ -1,2 +1,2 @@
-﻿open Day3
-Day3.Run();
+﻿open Day
+Day.Run();

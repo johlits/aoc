@@ -1,11 +1,18 @@
 ﻿module Day
+open System.IO
 open System
 
-let input = 
-    IO.File.ReadAllLines("day/p.in")
+type Day() =
+    static member Run() =
+        use file = new StreamReader("day/p.in")
 
-let a (x: string) = x.Length
-let b (x: string) = x.Split(" ").Length
+        let rec readLines() =
+            match file.ReadLine() with
+            | null -> ()
+            | ln ->
+                Console.WriteLine(ln)
+                readLines()
 
-let part1 = input |> Seq.sumBy a
-let part2 = input |> Seq.sumBy b
+        readLines()
+
+Day.Run()
