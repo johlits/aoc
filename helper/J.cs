@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Helper
@@ -72,6 +75,23 @@ namespace Helper
             return result;
         }
 
+        public static Tuple<long, long> Point(string s)
+        {
+            // Use a regular expression to find all numbers in the string
+            var matches = Regex.Matches(s, @"\d+");
+
+            // Check if we have exactly two numbers
+            if (matches.Count != 2)
+            {
+                throw new ArgumentException("The input string does not contain exactly two numbers.");
+            }
+
+            // Parse the numbers and return them as a tuple
+            long number1 = long.Parse(matches[0].Value);
+            long number2 = long.Parse(matches[1].Value);
+
+            return Tuple.Create(number1, number2);
+        }
 
         // Math
 
@@ -97,6 +117,47 @@ namespace Helper
                 result = LCM(result, numbers[i]);
             }
             return result;
+        }
+
+        public static long CrossProduct(Tuple<long, long> v1, Tuple<long, long> v2)
+        {
+            return v1.Item1 * v2.Item2 - v1.Item2 * v2.Item1;
+        }
+
+        public static bool DoLinesIntersect(Line line1, Line line2)
+        {
+            var r = new Tuple<long, long>(line1.Point2.Item1 - line1.Point1.Item1, line1.Point2.Item2 - line1.Point1.Item2);
+            var s = new Tuple<long, long>(line2.Point2.Item1 - line2.Point1.Item1, line2.Point2.Item2 - line2.Point1.Item2);
+
+            var rxs = CrossProduct(r, s);
+            var q_p = new Tuple<long, long>(line2.Point1.Item1 - line1.Point1.Item1, line2.Point1.Item2 - line1.Point1.Item2);
+            var t = CrossProduct(q_p, s) / (double)rxs;
+            var u = CrossProduct(q_p, r) / (double)rxs;
+
+            if (rxs == 0 && CrossProduct(q_p, r) == 0)
+            {
+                return (line1.Point1.Item1 <= line2.Point2.Item1 && line1.Point2.Item1 >= line2.Point1.Item1) ||
+                       (line1.Point1.Item2 <= line2.Point2.Item2 && line1.Point2.Item2 >= line2.Point1.Item2);
+            }
+
+            if (rxs == 0)
+                return false;
+
+            return (t >= 0 && t <= 1) && (u >= 0 && u <= 1);
+        }
+
+        // Classes
+
+        public class Line
+        {
+            public Tuple<long, long> Point1 { get; set; }
+            public Tuple<long, long> Point2 { get; set; }
+
+            public Line(Tuple<long, long> point1, Tuple<long, long> point2)
+            {
+                Point1 = point1;
+                Point2 = point2;
+            }
         }
     }
 }

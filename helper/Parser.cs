@@ -167,12 +167,26 @@
 
     public class ListOfIntegers : Blueprint
     {
-        public List<L1d> lists = new List<L1d>();
+        public List<L1d<int>> lists = new List<L1d<int>>();
+
         public void Process(List<string> list, Symbols symbols)
         {
             for (var i = 0; i < list.Count; i++)
             {
-                lists.Add(new L1d(list[i], symbols));
+                lists.Add(new L1d<int>(list[i], symbols));
+            }
+        }
+    }
+
+    public class ListOfStrings : Blueprint
+    {
+        public List<L1d<string>> lists = new List<L1d<string>>();
+
+        public void Process(List<string> list, Symbols symbols)
+        {
+            for (var i = 0; i < list.Count; i++)
+            {
+                lists.Add(new L1d<string>(list[i], symbols));
             }
         }
     }
@@ -198,11 +212,10 @@
         }
     }
 
-    public class L1d
+    public class L1d<T>
     {
-        public List<int> list = new List<int>();
+        public List<T> list = new List<T>();
         public Type type = Type.String;
-
 
         public L1d(string line, Symbols? symbol = null)
         {
@@ -214,7 +227,7 @@
             var parts = line.Split(splittingSymbol);
             foreach (var part in parts)
             {
-                list.Add(J.I(part));
+                list.Add((T)Convert.ChangeType(part, typeof(T)));
             }
         }
     }
