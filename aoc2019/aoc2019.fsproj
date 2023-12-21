@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="day06\p.in">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Compile Include="day06\Day6.fs" />
     <None Include="day05\p.in">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -4,15 +4,16 @@ public class DayTest
 {
     public static void Run()
     {
-        var numbers = new ListOfIntegers();
-        var bps = new List<Tuple<Blueprint, int>>
+        using (StreamReader file = new StreamReader("test/p.in"))
         {
-            new Tuple<Blueprint, int>(numbers, -1),
-        };
-        new Parser("dayTest/p.in", bps, new Symbols()
-        {
+            string? ln;
+            while ((ln = file.ReadLine()) != null)
+            {
+                Console.WriteLine(ln);
+            }
 
-        });
+            file.Close();
+        }
     }
 }
 
