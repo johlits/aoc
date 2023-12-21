@@ -1,17 +1,18 @@
-﻿public class Day
+﻿using Helper;
+
+public class Day
 {
     public static void Run()
     {
-        using (StreamReader file = new StreamReader("day/p.in"))
+        var numbers = new ListOfIntegers();
+        var bps = new List<Tuple<Blueprint, int>>
         {
-            string? ln;
-            while ((ln = file.ReadLine()) != null)
-            {
-                Console.WriteLine(ln);
-            }
+            new Tuple<Blueprint, int>(numbers, -1),
+        };
+        new Parser("day04/p.in", bps, new Symbols()
+        {
 
-            file.Close();
-        }
+        });
     }
 }
 

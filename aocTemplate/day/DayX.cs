@@ -4,14 +4,15 @@ public class DayX
 {
     public static void Run()
     {
-        using (StreamReader file = new StreamReader("day/p.in"))
+        var numbers = new ListOfIntegers();
+        var bps = new List<Tuple<Blueprint, int>>
         {
-            string? ln;
-            while ((ln = file.ReadLine()) != null)
-            {
-                Console.WriteLine(ln);
-            }
-        }
+            new Tuple<Blueprint, int>(numbers, -1),
+        };
+        new Parser("dayXX/p.in", bps, new Symbols()
+        {
+
+        });
     }
 }
 

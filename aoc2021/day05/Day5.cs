@@ -1,6 +1,6 @@
 ﻿using Helper;
 
-public class Day1
+public class Day5
 {
     public static void Run()
     {
@@ -9,7 +9,7 @@ public class Day1
         {
             new Tuple<Blueprint, int>(numbers, -1),
         };
-        new Parser("day01/p.in", bps, new Symbols()
+        new Parser("day05/p.in", bps, new Symbols()
         {
 
         });
