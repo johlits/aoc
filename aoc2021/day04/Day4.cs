@@ -1,16 +1,13 @@
-﻿public class Day4
+﻿using Helper;
+
+public class Day4
 {
     public static void Run()
     {
         using (StreamReader file = new StreamReader("day04/p.in"))
         {
-            string? ln;
-            while ((ln = file.ReadLine()) != null)
-            {
-                Console.WriteLine(ln);
-            }
-
-            file.Close();
+            var a = "3";
+            J.O(J.I(a) + 1);
         }
     }
 }

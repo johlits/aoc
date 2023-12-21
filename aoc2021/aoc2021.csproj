@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\helper\Helper.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="day02\p.in">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
