@@ -1,1 +1,1 @@
-﻿Day1.Run();
+﻿DayTest.Run();

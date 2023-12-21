@@ -75,7 +75,7 @@ namespace Helper
 
         // Math
 
-        static long GCD(long a, long b)
+        public static long GCD(long a, long b)
         {
             while (b != 0)
             {
@@ -86,7 +86,7 @@ namespace Helper
             return a;
         }
 
-        static long LCM(params long[] numbers)
+        public static long LCM(params long[] numbers)
         {
             if (numbers.Length == 0)
                 throw new ArgumentException("At least two numbers are required.");

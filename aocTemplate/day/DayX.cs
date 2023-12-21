@@ -1,4 +1,6 @@
-﻿public class Day
+﻿using Helper;
+
+public class DayX
 {
     public static void Run()
     {
@@ -9,8 +11,6 @@
             {
                 Console.WriteLine(ln);
             }
-
-            file.Close();
         }
     }
 }
