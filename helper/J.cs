@@ -124,26 +124,46 @@ namespace Helper
             return v1.Item1 * v2.Item2 - v1.Item2 * v2.Item1;
         }
 
-        public static bool DoLinesIntersect(Line line1, Line line2)
+        public static Tuple<double, double>? LineIntersection(
+    Line line1, Line line2, bool infiniteLines, bool futureIntersection)
         {
             var r = new Tuple<long, long>(line1.Point2.Item1 - line1.Point1.Item1, line1.Point2.Item2 - line1.Point1.Item2);
             var s = new Tuple<long, long>(line2.Point2.Item1 - line2.Point1.Item1, line2.Point2.Item2 - line2.Point1.Item2);
 
             var rxs = CrossProduct(r, s);
             var q_p = new Tuple<long, long>(line2.Point1.Item1 - line1.Point1.Item1, line2.Point1.Item2 - line1.Point1.Item2);
+
+            if (rxs == 0)
+            {
+                return null;
+            }
+
             var t = CrossProduct(q_p, s) / (double)rxs;
             var u = CrossProduct(q_p, r) / (double)rxs;
 
-            if (rxs == 0 && CrossProduct(q_p, r) == 0)
+            double x = line1.Point1.Item1 + t * r.Item1;
+            double y = line1.Point1.Item2 + t * r.Item2;
+
+            if (infiniteLines)
             {
-                return (line1.Point1.Item1 <= line2.Point2.Item1 && line1.Point2.Item1 >= line2.Point1.Item1) ||
-                       (line1.Point1.Item2 <= line2.Point2.Item2 && line1.Point2.Item2 >= line2.Point1.Item2);
+                if (futureIntersection && (t >= 0 && u >= 0))
+                {
+                    return new Tuple<double, double>(x, y);
+                }
+                else if (!futureIntersection)
+                {
+                    return new Tuple<double, double>(x, y);
+                }
+            }
+            else
+            {
+                if ((t >= 0 && t <= 1) && (u >= 0 && u <= 1))
+                {
+                    return new Tuple<double, double>(x, y);
+                }
             }
 
-            if (rxs == 0)
-                return false;
-
-            return (t >= 0 && t <= 1) && (u >= 0 && u <= 1);
+            return new Tuple<double, double>(x, y);
         }
 
         // Classes

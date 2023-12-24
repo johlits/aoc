@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\helper\Helper.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="day23\p.in">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -77,6 +81,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="day21\p.in">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="day25\p.in">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="day24\p.in">
