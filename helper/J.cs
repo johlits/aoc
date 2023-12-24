@@ -124,59 +124,92 @@ namespace Helper
             return v1.Item1 * v2.Item2 - v1.Item2 * v2.Item1;
         }
 
-        public static Tuple<double, double>? LineIntersection(
-    Line line1, Line line2, bool infiniteLines, bool futureIntersection)
+        public static long CrossProduct(Tuple<long, long, long> v1, Tuple<long, long, long> v2)
         {
-            var r = new Tuple<long, long>(line1.Point2.Item1 - line1.Point1.Item1, line1.Point2.Item2 - line1.Point1.Item2);
-            var s = new Tuple<long, long>(line2.Point2.Item1 - line2.Point1.Item1, line2.Point2.Item2 - line2.Point1.Item2);
+            long xComponent = v1.Item2 * v2.Item3 - v1.Item3 * v2.Item2;
+            long yComponent = v1.Item3 * v2.Item1 - v1.Item1 * v2.Item3;
+            long zComponent = v1.Item1 * v2.Item2 - v1.Item2 * v2.Item1;
+
+            return xComponent + yComponent + zComponent;
+        }
+
+        public static Tuple<double, double, double>? LineIntersection(
+            Line3D line1, Line3D line2, bool infiniteLines, bool futureIntersection)
+        {
+            var r = new Tuple<long, long, long>(
+                line1.Point2.X - line1.Point1.X,
+                line1.Point2.Y - line1.Point1.Y,
+                line1.Point2.Z - line1.Point1.Z);
+            var s = new Tuple<long, long, long>(
+                line2.Point2.X - line2.Point1.X,
+                line2.Point2.Y - line2.Point1.Y,
+                line2.Point2.Z - line2.Point1.Z);
 
             var rxs = CrossProduct(r, s);
-            var q_p = new Tuple<long, long>(line2.Point1.Item1 - line1.Point1.Item1, line2.Point1.Item2 - line1.Point1.Item2);
+            var q_p = new Tuple<long, long, long>(
+                line2.Point1.X - line1.Point1.X,
+                line2.Point1.Y - line1.Point1.Y,
+                line2.Point1.Z - line1.Point1.Z);
 
             if (rxs == 0)
             {
                 return null;
             }
 
-            var t = CrossProduct(q_p, s) / (double)rxs;
-            var u = CrossProduct(q_p, r) / (double)rxs;
+            var t_numer = CrossProduct(q_p, s);
+            var u_numer = CrossProduct(q_p, r);
+            var denom = CrossProduct(r, s);
 
-            double x = line1.Point1.Item1 + t * r.Item1;
-            double y = line1.Point1.Item2 + t * r.Item2;
+            double t = (double)t_numer / denom;
+            double u = (double)u_numer / denom;
+
+            double intersectX = line1.Point1.X + t * r.Item1;
+            double intersectY = line1.Point1.Y + t * r.Item2;
+            double intersectZ = line1.Point1.Z + t * r.Item3;
 
             if (infiniteLines)
             {
-                if (futureIntersection && (t >= 0 && u >= 0))
+                if (futureIntersection && t >= 0 && u >= 0)
                 {
-                    return new Tuple<double, double>(x, y);
+                    return new Tuple<double, double, double>(intersectX, intersectY, intersectZ);
                 }
                 else if (!futureIntersection)
                 {
-                    return new Tuple<double, double>(x, y);
+                    return new Tuple<double, double, double>(intersectX, intersectY, intersectZ);
                 }
             }
             else
             {
-                if ((t >= 0 && t <= 1) && (u >= 0 && u <= 1))
+                if (t >= 0 && t <= 1 && u >= 0 && u <= 1)
                 {
-                    return new Tuple<double, double>(x, y);
+                    return new Tuple<double, double, double>(intersectX, intersectY, intersectZ);
                 }
             }
 
-            return new Tuple<double, double>(x, y);
+            return null;
         }
 
-        // Classes
-
-        public class Line
+        public class Line3D
         {
-            public Tuple<long, long> Point1 { get; set; }
-            public Tuple<long, long> Point2 { get; set; }
+            public Vector3D Point1 { get; set; }
+            public Vector3D Point2 { get; set; }
 
-            public Line(Tuple<long, long> point1, Tuple<long, long> point2)
+            public Line3D(Vector3D point1, Vector3D point2)
             {
                 Point1 = point1;
                 Point2 = point2;
+            }
+        }
+
+        public class Vector3D
+        {
+            public long X, Y, Z;
+
+            public Vector3D(long x, long y, long z)
+            {
+                X = x;
+                Y = y;
+                Z = z;
             }
         }
     }

@@ -13,7 +13,7 @@ public class Day24
         public long DZ { get; set; }
     }
 
-    private static bool IsWithinRange(Tuple<double, double> intersection)
+    private static bool IsWithinRange(Tuple<double, double, double> intersection)
     {
         const long minRange = 200000000000000;
         const long maxRange = 400000000000000;
@@ -46,12 +46,12 @@ public class Day24
                 });
             }
 
-            var lines = new List<J.Line>();
+            var lines = new List<J.Line3D>();
             foreach (var hailstone in hailstones)
             {
-                lines.Add(new J.Line(
-                    new Tuple<long, long>(hailstone.X, hailstone.Y),
-                    new Tuple<long, long>(hailstone.X + hailstone.DX, hailstone.Y + hailstone.DY)));
+                lines.Add(new J.Line3D(
+                    new J.Vector3D(hailstone.X, hailstone.Y, 1),
+                    new J.Vector3D(hailstone.X + hailstone.DX, hailstone.Y + hailstone.DY, 1)));
             }
 
             int cnt = 0;
@@ -59,12 +59,12 @@ public class Day24
             {
                 for (int j = i + 1; j < lines.Count; j++)
                 {
-                    Tuple<double, double>? intersection = J.LineIntersection(lines[i], lines[j], true, true);
+                    Tuple<double, double, double>? intersection = J.LineIntersection(lines[i], lines[j], true, true);
                     if (intersection != null)
                     {
-                        var r = new Tuple<long, long>(lines[i].Point2.Item1 - lines[i].Point1.Item1, lines[i].Point2.Item2 - lines[i].Point1.Item2);
-                        var s = new Tuple<long, long>(lines[j].Point2.Item1 - lines[j].Point1.Item1, lines[j].Point2.Item2 - lines[j].Point1.Item2);
-                        var q_p = new Tuple<long, long>(lines[j].Point1.Item1 - lines[i].Point1.Item1, lines[j].Point1.Item2 - lines[i].Point1.Item2);
+                        var r = new Tuple<long, long>(lines[i].Point2.X - lines[i].Point1.X, lines[i].Point2.Y - lines[i].Point1.Y);
+                        var s = new Tuple<long, long>(lines[j].Point2.X - lines[j].Point1.X, lines[j].Point2.Y - lines[j].Point1.Y);
+                        var q_p = new Tuple<long, long>(lines[j].Point1.X - lines[i].Point1.X, lines[j].Point1.Y - lines[i].Point1.Y);
                         var rxs = J.CrossProduct(r, s);
 
                         var t = J.CrossProduct(q_p, s) / (double)rxs;
