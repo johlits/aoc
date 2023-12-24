@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualBasic;
+﻿using Microsoft.Z3;
 using Helper;
 
 public class Day24
@@ -22,6 +22,50 @@ public class Day24
 
         return intersection.Item1 >= minRange && intersection.Item1 <= maxRange &&
                intersection.Item2 >= minRange && intersection.Item2 <= maxRange;
+    }
+
+    static long Solve(List<Hailstone> hailstones)
+    {
+        var context = new Context();
+        var solver = context.MkSolver();
+
+        var position = new[] { context.MkIntConst("x"), context.MkIntConst("y"), context.MkIntConst("z") };
+        var velocity = new[] { context.MkIntConst("vx"), context.MkIntConst("vy"), context.MkIntConst("vz") };
+
+        for (int i = 0; i < hailstones.Count; i++)
+        {
+            var time = context.MkIntConst($"t{i}");
+            var hailstone = hailstones[i];
+
+            var hailstonePosition = new[] {
+            context.MkInt(hailstone.X),
+            context.MkInt(hailstone.Y),
+            context.MkInt(hailstone.Z)
+        };
+            var hailstoneVelocity = new[] {
+            context.MkInt(hailstone.DX),
+            context.MkInt(hailstone.DY),
+            context.MkInt(hailstone.DZ)
+        };
+
+            for (int dim = 0; dim < 3; dim++)
+            {
+                var predictedPosition = context.MkAdd(position[dim], context.MkMul(time, velocity[dim]));
+                var actualPosition = context.MkAdd(hailstonePosition[dim], context.MkMul(time, hailstoneVelocity[dim]));
+
+                solver.Add(time >= 0);
+                solver.Add(context.MkEq(predictedPosition, actualPosition));
+            }
+        }
+
+        if (solver.Check() == Status.SATISFIABLE)
+        {
+            var model = solver.Model;
+            var result = position.Select(coord => Convert.ToInt64(model.Eval(coord).ToString())).Sum();
+            return result;
+        }
+
+        throw new Exception("No solution found");
     }
 
     public static void Run()
@@ -77,7 +121,9 @@ public class Day24
                     }
                 }
             }
+
             Console.WriteLine(cnt);
+            Console.WriteLine(Solve(hailstones));
 
             file.Close();
         }
