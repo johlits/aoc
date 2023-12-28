@@ -1,6 +1,6 @@
 ﻿using Helper;
 
-public class Day
+public class Day8
 {
     public static void Run()
     {
