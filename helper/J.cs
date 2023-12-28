@@ -75,7 +75,7 @@ namespace Helper
             return result;
         }
 
-        public static Tuple<long, long> Point(string s)
+        public static (long, long) Point(string s)
         {
             // Use a regular expression to find all numbers in the string
             var matches = Regex.Matches(s, @"\d+");
@@ -90,7 +90,7 @@ namespace Helper
             long number1 = long.Parse(matches[0].Value);
             long number2 = long.Parse(matches[1].Value);
 
-            return Tuple.Create(number1, number2);
+            return (number1, number2);
         }
 
         // Math
@@ -119,12 +119,12 @@ namespace Helper
             return result;
         }
 
-        public static long CrossProduct(Tuple<long, long> v1, Tuple<long, long> v2)
+        public static long CrossProduct((long, long) v1, (long, long) v2)
         {
             return v1.Item1 * v2.Item2 - v1.Item2 * v2.Item1;
         }
 
-        public static long CrossProduct(Tuple<long, long, long> v1, Tuple<long, long, long> v2)
+        public static long CrossProduct((long, long, long) v1, (long, long, long) v2)
         {
             long xComponent = v1.Item2 * v2.Item3 - v1.Item3 * v2.Item2;
             long yComponent = v1.Item3 * v2.Item1 - v1.Item1 * v2.Item3;
@@ -133,20 +133,20 @@ namespace Helper
             return xComponent + yComponent + zComponent;
         }
 
-        public static Tuple<double, double, double>? LineIntersection(
+        public static (double, double, double)? LineIntersection(
             Line3D line1, Line3D line2, bool infiniteLines, bool futureIntersection)
         {
-            var r = new Tuple<long, long, long>(
+            var r = (
                 line1.Point2.X - line1.Point1.X,
                 line1.Point2.Y - line1.Point1.Y,
                 line1.Point2.Z - line1.Point1.Z);
-            var s = new Tuple<long, long, long>(
+            var s = (
                 line2.Point2.X - line2.Point1.X,
                 line2.Point2.Y - line2.Point1.Y,
                 line2.Point2.Z - line2.Point1.Z);
 
             var rxs = CrossProduct(r, s);
-            var q_p = new Tuple<long, long, long>(
+            var q_p = (
                 line2.Point1.X - line1.Point1.X,
                 line2.Point1.Y - line1.Point1.Y,
                 line2.Point1.Z - line1.Point1.Z);
@@ -171,18 +171,18 @@ namespace Helper
             {
                 if (futureIntersection && t >= 0 && u >= 0)
                 {
-                    return new Tuple<double, double, double>(intersectX, intersectY, intersectZ);
+                    return (intersectX, intersectY, intersectZ);
                 }
                 else if (!futureIntersection)
                 {
-                    return new Tuple<double, double, double>(intersectX, intersectY, intersectZ);
+                    return (intersectX, intersectY, intersectZ);
                 }
             }
             else
             {
                 if (t >= 0 && t <= 1 && u >= 0 && u <= 1)
                 {
-                    return new Tuple<double, double, double>(intersectX, intersectY, intersectZ);
+                    return (intersectX, intersectY, intersectZ);
                 }
             }
 

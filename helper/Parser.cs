@@ -18,7 +18,7 @@
 
     public class Parser
     {
-        public Parser(string path, List<Tuple<Blueprint, int>> blueprints, Symbols symbols)
+        public Parser(string path, List<(Blueprint, int)> blueprints, Symbols symbols)
         {
             using (StreamReader file = new StreamReader(path))
             {
@@ -234,25 +234,25 @@
 
     public class M2d
     {
-        private Tuple<long, long> dimensions = null;
+        private (long, long) dimensions;
         public long Width { get { return dimensions.Item1; } }
         public long Height { get { return dimensions.Item2; } }
-        public List<Tuple<long, long>> Starts = new List<Tuple<long, long>>();
-        public List<Tuple<long, long>> Goals = new List<Tuple<long, long>>();
-        public List<Tuple<long, long>> Obstacles = new List<Tuple<long, long>>();
+        public List<(long, long)> Starts = new List<(long, long)>();
+        public List<(long, long)> Goals = new List<(long, long)>();
+        public List<(long, long)> Obstacles = new List<(long, long)>();
 
-        public long? BFS(Tuple<long, long> start, Tuple<long, long> goal)
+        public long? BFS((long, long) start, (long, long) goal)
         {
             long? shortestDistance = null;
 
-            var current = new Tuple<Tuple<long, long>, long>(start, 0);
-            var q = new Queue<Tuple<Tuple<long, long>, long>>();
-            var v = new HashSet<Tuple<long, long>>();
+            var current = ((start.Item1, start.Item2), 0);
+            var q = new Queue<((long, long), long)>();
+            var v = new HashSet<(long, long)>();
             q.Enqueue(current);
 
             while (q.Count > 0)
             {
-                current = q.Dequeue();
+                current = (((long, long) start, int))q.Dequeue();
                 var position = current.Item1;
                 var distance = current.Item2;
 
@@ -262,80 +262,80 @@
                     break;
                 }
 
-                var w = GoWest(position);
-                var e = GoEast(position);
-                var n = GoNorth(position);
-                var s = GoSouth(position);
+                (long, long)? w = GoWest(position);
+                (long, long)? e = GoEast(position);
+                (long, long)? n = GoNorth(position);
+                (long, long)? s = GoSouth(position);
 
-                if (w != null && !v.Contains(w) && !Obstacles.Contains(w))
+                if (w != null && !v.Contains(w.Value) && !Obstacles.Contains(w.Value))
                 {
-                    q.Enqueue(new Tuple<Tuple<long, long>, long>(w, distance + 1));
+                    q.Enqueue((w.Value, distance + 1));
                 }
-                if (e != null && !v.Contains(e) && !Obstacles.Contains(e))
+                if (e != null && !v.Contains(e.Value) && !Obstacles.Contains(e.Value))
                 {
-                    q.Enqueue(new Tuple<Tuple<long, long>, long>(e, distance + 1));
+                    q.Enqueue((e.Value, distance + 1));
                 }
-                if (n != null && !v.Contains(n) && !Obstacles.Contains(n))
+                if (n != null && !v.Contains(n.Value) && !Obstacles.Contains(n.Value))
                 {
-                    q.Enqueue(new Tuple<Tuple<long, long>, long>(n, distance + 1));
+                    q.Enqueue((n.Value, distance + 1));
                 }
-                if (s != null && !v.Contains(s) && !Obstacles.Contains(s))
+                if (s != null && !v.Contains(s.Value) && !Obstacles.Contains(s.Value))
                 {
-                    q.Enqueue(new Tuple<Tuple<long, long>, long>(s, distance + 1));
+                    q.Enqueue((s.Value, distance + 1));
                 }
             }
 
             return shortestDistance;
         }
 
-        public Tuple<long, long>? GoNorth(Tuple<long, long> position, bool wrap = false)
+        public (long, long)? GoNorth((long, long) position, bool wrap = false)
         {
             if (position.Item2 > 0)
             {
-                return new Tuple<long, long>(position.Item1, position.Item2 - 1);
+                return (position.Item1, position.Item2 - 1);
             }
             else if (wrap)
             {
-                return new Tuple<long, long>(position.Item1, Height - 1);
+                return (position.Item1, Height - 1);
             }
             return null;
         }
 
-        public Tuple<long, long>? GoSouth(Tuple<long, long> position, bool wrap = false)
+        public (long, long)? GoSouth((long, long) position, bool wrap = false)
         {
             if (position.Item2 < Height - 1)
             {
-                return new Tuple<long, long>(position.Item1, position.Item2 + 1);
+                return (position.Item1, position.Item2 + 1);
             }
             else if (wrap)
             {
-                return new Tuple<long, long>(position.Item1, 0);
+                return (position.Item1, 0);
             }
             return null;
         }
 
-        public Tuple<long, long>? GoWest(Tuple<long, long> position, bool wrap = false)
+        public (long, long)? GoWest((long, long) position, bool wrap = false)
         {
             if (position.Item1 > 0)
             {
-                return new Tuple<long, long>(position.Item1 - 1, position.Item2);
+                return (position.Item1 - 1, position.Item2);
             }
             else if (wrap)
             {
-                return new Tuple<long, long>(Width - 1, position.Item2);
+                return (Width - 1, position.Item2);
             }
             return null;
         }
 
-        public Tuple<long, long>? GoEast(Tuple<long, long> position, bool wrap = false)
+        public (long, long)? GoEast((long, long) position, bool wrap = false)
         {
             if (position.Item1 < Width - 1)
             {
-                return new Tuple<long, long>(position.Item1 + 1, position.Item2);
+                return (position.Item1 + 1, position.Item2);
             }
             else if (wrap)
             {
-                return new Tuple<long, long>(0, position.Item2);
+                return (0, position.Item2);
             }
             return null;
         }
@@ -350,21 +350,21 @@
                     {
                         if (symbols.StartSymbol != null && lines[i][j] == symbols.StartSymbol)
                         {
-                            Starts.Add(new Tuple<long, long>(j, i));
+                            Starts.Add((j, i));
                         }
                         if (symbols.GoalSymbol != null && lines[i][j] == symbols.GoalSymbol)
                         {
-                            Goals.Add(new Tuple<long, long>(j, i));
+                            Goals.Add((j, i));
                         }
                         if (symbols.ObstacleSymbol != null && lines[i][j] == symbols.ObstacleSymbol)
                         {
-                            Obstacles.Add(new Tuple<long, long>(j, i));
+                            Obstacles.Add((j, i));
                         }
                     }
                 }
             }
 
-            dimensions = new Tuple<long, long>(width, height);
+            dimensions = (width, height);
         }
     }
 }

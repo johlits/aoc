@@ -13,15 +13,15 @@ public class Day24
         public long DZ { get; set; }
     }
 
-    private static bool IsWithinRange(Tuple<double, double, double> intersection)
+    private static bool IsWithinRange((double, double, double)? intersection)
     {
         const long minRange = 200000000000000;
         const long maxRange = 400000000000000;
         //const long minRange = 7;
         //const long maxRange = 27;
 
-        return intersection.Item1 >= minRange && intersection.Item1 <= maxRange &&
-               intersection.Item2 >= minRange && intersection.Item2 <= maxRange;
+        return intersection.Value.Item1 >= minRange && intersection.Value.Item1 <= maxRange &&
+               intersection.Value.Item2 >= minRange && intersection.Value.Item2 <= maxRange;
     }
 
     static long Solve(List<Hailstone> hailstones)
@@ -103,12 +103,12 @@ public class Day24
             {
                 for (int j = i + 1; j < lines.Count; j++)
                 {
-                    Tuple<double, double, double>? intersection = J.LineIntersection(lines[i], lines[j], true, true);
+                    (double, double, double)? intersection = J.LineIntersection(lines[i], lines[j], true, true);
                     if (intersection != null)
                     {
-                        var r = new Tuple<long, long>(lines[i].Point2.X - lines[i].Point1.X, lines[i].Point2.Y - lines[i].Point1.Y);
-                        var s = new Tuple<long, long>(lines[j].Point2.X - lines[j].Point1.X, lines[j].Point2.Y - lines[j].Point1.Y);
-                        var q_p = new Tuple<long, long>(lines[j].Point1.X - lines[i].Point1.X, lines[j].Point1.Y - lines[i].Point1.Y);
+                        var r = (lines[i].Point2.X - lines[i].Point1.X, lines[i].Point2.Y - lines[i].Point1.Y);
+                        var s = (lines[j].Point2.X - lines[j].Point1.X, lines[j].Point2.Y - lines[j].Point1.Y);
+                        var q_p = (lines[j].Point1.X - lines[i].Point1.X, lines[j].Point1.Y - lines[i].Point1.Y);
                         var rxs = J.CrossProduct(r, s);
 
                         var t = J.CrossProduct(q_p, s) / (double)rxs;

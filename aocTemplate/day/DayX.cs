@@ -5,9 +5,9 @@ public class DayX
     public static void Run()
     {
         var numbers = new ListOfIntegers();
-        var bps = new List<Tuple<Blueprint, int>>
+        var bps = new List<(Blueprint, int)>
         {
-            new Tuple<Blueprint, int>(numbers, -1),
+            (numbers, -1),
         };
         new Parser("dayXX/p.in", bps, new Symbols()
         {

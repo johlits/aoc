@@ -6,10 +6,10 @@ public class Day4
     {
         var numbers = new ListOfIntegers();
         var bingo = new ListOfIntegerBingos();
-        var bps = new List<Tuple<Blueprint, int>>
+        var bps = new List<(Blueprint, int)>
         {
-            new Tuple<Blueprint, int>(numbers, 1),
-            new Tuple<Blueprint, int>(bingo, -1)
+            (numbers, 1),
+            (bingo, -1)
         };
         new Parser("day04/p.in", bps, new Symbols()
         {
