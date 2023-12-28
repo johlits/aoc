@@ -43,7 +43,7 @@ public class Day8
         };
         new Parser("p.in", bps, new Symbols()
         {
-            SplittingSymbol = ' '
+            Delimiter = " "
         });
 
         int[] uniqueSegmentCounts = { 2, 4, 3, 7 };

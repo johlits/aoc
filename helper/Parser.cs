@@ -10,7 +10,7 @@
 
     public class Symbols
     {
-        public char? SplittingSymbol { get; set; }
+        public string? Delimiter { get; set; }
         public char? StartSymbol { get; set; }
         public char? GoalSymbol { get; set; }
         public char? ObstacleSymbol { get; set; }
@@ -35,7 +35,7 @@
                 {
                     if (ln.Trim() == "")
                     {
-                        if (bluePrintIteration < bluePrintIterations)
+                        if (bluePrintIteration < bluePrintIterations && bluePrintIterations != int.MaxValue)
                         {
                             blueprint.Process(lines, symbols);
                             lines = new List<string>();
@@ -169,9 +169,14 @@
     public class ListOfIntegers : Blueprint
     {
         public List<L1d<int>> lists = new List<L1d<int>>();
+        public string Delimiter;
 
         public void Process(List<string> list, Symbols symbols)
         {
+            if (Delimiter != null)
+            {
+                symbols.Delimiter = Delimiter;
+            }
             for (var i = 0; i < list.Count; i++)
             {
                 lists.Add(new L1d<int>(list[i], symbols));
@@ -182,9 +187,14 @@
     public class ListOfStrings : Blueprint
     {
         public List<L1d<string>> lists = new List<L1d<string>>();
+        public string Delimiter;
 
         public void Process(List<string> list, Symbols symbols)
         {
+            if (Delimiter != null)
+            {
+                symbols.Delimiter = Delimiter;
+            }
             for (var i = 0; i < list.Count; i++)
             {
                 lists.Add(new L1d<string>(list[i], symbols));
@@ -221,10 +231,10 @@
 
         public L1d(string line, Symbols? symbol = null)
         {
-            var splittingSymbol = ',';
-            if (symbol != null && symbol.SplittingSymbol != null)
+            var splittingSymbol = ",";
+            if (symbol != null && symbol.Delimiter != null)
             {
-                splittingSymbol = (char)symbol.SplittingSymbol;
+                splittingSymbol = symbol.Delimiter;
             }
             var parts = line.Split(splittingSymbol);
             foreach (var part in parts)

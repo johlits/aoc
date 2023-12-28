@@ -11,7 +11,7 @@ public class Day5
         };
         new Parser("day05/p.in", bps, new Symbols()
         {
-            SplittingSymbol = ' '
+            Delimiter = " "
         });
 
         var grid = new int[1000, 1000];

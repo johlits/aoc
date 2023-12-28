@@ -12,7 +12,7 @@ public class Day12
         };
         new Parser("p.in", bps, new Symbols()
         {
-            SplittingSymbol = '-'
+            Delimiter = "-"
         });
 
         foreach (var pair in pairs.lists)
