@@ -77,6 +77,7 @@
     public class ListOfIntegerBingos : Blueprint
     {
         public List<Bingo> bingos = new List<Bingo>();
+        public bool SaveInput;
         public void Process(List<string> list, Symbols symbols)
         {
             bingos.Add(new Bingo(list));
@@ -194,6 +195,7 @@
     public class ListOf2dMaps : Blueprint
     {
         public List<M2d> Matrix2ds = new List<M2d>();
+        public bool SaveInput;
 
         public int Count()
         {
@@ -208,7 +210,7 @@
         public void Process(List<string> lines, Symbols symbols)
         {
             int width = lines[0].Length;
-            Matrix2ds.Add(new M2d(lines, width, lines.Count, symbols));
+            Matrix2ds.Add(new M2d(lines, width, lines.Count, SaveInput, symbols));
         }
     }
 
@@ -235,6 +237,7 @@
     public class M2d
     {
         private (long, long) dimensions;
+        public char[,] Map;
         public long Width { get { return dimensions.Item1; } }
         public long Height { get { return dimensions.Item2; } }
         public List<(long, long)> Starts = new List<(long, long)>();
@@ -340,8 +343,13 @@
             return null;
         }
 
-        public M2d(List<string> lines, int width, int height, Symbols? symbols)
+        public M2d(List<string> lines, int width, int height, bool saveMap, Symbols? symbols)
         {
+            if (saveMap)
+            {
+                Map = new char[width, height];
+            }
+
             if (symbols != null)
             {
                 for (var i = 0; i < height; i++)
@@ -359,6 +367,10 @@
                         if (symbols.ObstacleSymbol != null && lines[i][j] == symbols.ObstacleSymbol)
                         {
                             Obstacles.Add((j, i));
+                        }
+                        if (saveMap)
+                        {
+                            Map[j, i] = lines[i][j];
                         }
                     }
                 }
