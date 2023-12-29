@@ -254,6 +254,52 @@
         public List<(long, long)> Goals = new List<(long, long)>();
         public List<(long, long)> Obstacles = new List<(long, long)>();
 
+        private static long[] dx = { -1, 1, 0, 0 };
+        private static long[] dy = { 0, 0, -1, 1 };
+
+        private static IEnumerable<(long, long)> GetNeighbors(long x, long y, long rows, long cols)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                var nx = x + dx[i];
+                var ny = y + dy[i];
+
+                if (nx >= 0 && nx < rows && ny >= 0 && ny < cols)
+                {
+                    yield return (nx, ny);
+                }
+            }
+        }
+
+        public long Dijkstra((long, long) start, (long, long) goal)
+        {
+            var rows = Height;
+            var cols = Width;
+            var risk = new long[rows, cols];
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < cols; j++)
+                    risk[i, j] = long.MaxValue;
+
+            var pq = new PriorityQueue<(long, long), long>();
+            pq.Enqueue((start.Item1, start.Item2), 0);
+            risk[start.Item1, start.Item2] = 0;
+
+            while (pq.Count > 0)
+            {
+                var (x, y) = pq.Dequeue();
+                foreach (var (dx, dy) in GetNeighbors(x, y, rows, cols))
+                {
+                    long newRisk = risk[x, y] + Map[dx, dy] - '0';
+                    if (newRisk < risk[dx, dy])
+                    {
+                        risk[dx, dy] = newRisk;
+                        pq.Enqueue((dx, dy), newRisk);
+                    }
+                }
+            }
+            return risk[goal.Item1, goal.Item2];
+        }
+
         public long? BFS((long, long) start, (long, long) goal)
         {
             long? shortestDistance = null;
